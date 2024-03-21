@@ -523,25 +523,7 @@ twitch-videoad.js text/javascript
             }
             return null;
         }
-        function findReactRootNode() {
-            var reactRootNode = null;
-            var rootNode = document.querySelector('#root');
-            if (rootNode && rootNode._reactRootContainer && rootNode._reactRootContainer._internalRoot && rootNode._reactRootContainer._internalRoot.current) {
-                reactRootNode = rootNode._reactRootContainer._internalRoot.current;
-            }
-            if (reactRootNode == null) {
-                var containerName = Object.keys(rootNode).find(x => x.startsWith('__reactContainer'));
-                if (containerName != null) {
-                    reactRootNode = rootNode[containerName];
-                }
-            }
-            return reactRootNode;
-        }
-        var reactRootNode = findReactRootNode();
-        if (!reactRootNode) {
-            console.log('Could not find react root');
-            return;
-        }
+    
         var player = findReactNode(reactRootNode, node => node.setPlayerActive && node.props && node.props.mediaPlayerInstance);
         player = player && player.props && player.props.mediaPlayerInstance ? player.props.mediaPlayerInstance : null;
         var playerState = findReactNode(reactRootNode, node => node.setSrc && node.setInitialPlaybackSettings);
