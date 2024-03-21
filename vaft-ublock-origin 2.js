@@ -454,6 +454,17 @@ twitch-videoad.js text/javascript
                             }
                             init.body = JSON.stringify(newBody);
                         }
+                        if (OPT_ACCESS_TOKEN_PLAYER_TYPE) {
+                            const newBody = JSON.parse(init.body);
+                            if (Array.isArray(newBody)) {
+                                for (let i = 0; i < newBody.length; i++) {
+                                    newBody[i].variables.playerType = OPT_ACCESS_TOKEN_PLAYER_TYPE;
+                                }
+                            } else {
+                                newBody.variables.playerType = OPT_ACCESS_TOKEN_PLAYER_TYPE;
+                            }
+                            init.body = JSON.stringify(newBody);
+                        }
                         if (OPT_ROLLING_DEVICE_ID) {
                             if (typeof init.headers['X-Device-Id'] === 'string') {
                                 init.headers['X-Device-Id'] = gql_device_id_rolling;
@@ -464,21 +475,17 @@ twitch-videoad.js text/javascript
                         }
                         if (typeof init.headers['Client-Integrity'] === 'string') {
                             ClientIntegrityHeader = init.headers['Client-Integrity'];
-                            if (ClientIntegrityHeader && twitchMainWorker) {
-                                twitchMainWorker.postMessage({
-                                    key: 'UpdateClientIntegrityHeader',
-                                    value: init.headers['Client-Integrity']
-                                });
-                            }
+                            twitchMainWorker.postMessage({
+                                key: 'UpdateClientIntegrityHeader',
+                                value: init.headers['Client-Integrity']
+                            });
                         }
                         if (typeof init.headers['Authorization'] === 'string') {
                             AuthorizationHeader = init.headers['Authorization'];
-                            if (AuthorizationHeader && twitchMainWorker) {
-                                twitchMainWorker.postMessage({
-                                    key: 'UpdateAuthorizationHeader',
-                                    value: init.headers['Authorization']
-                                });
-                            }
+                            twitchMainWorker.postMessage({
+                                key: 'UpdateAuthorizationHeader',
+                                value: init.headers['Authorization']
+                            });
                         }
                     }
                 }
