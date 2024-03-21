@@ -523,7 +523,15 @@ twitch-videoad.js text/javascript
             }
             return null;
         }
-    
+        var reactRootNode = null;
+        var rootNode = document.querySelector('#root');
+        if (rootNode && rootNode._reactRootContainer && rootNode._reactRootContainer._internalRoot && rootNode._reactRootContainer._internalRoot.current) {
+            reactRootNode = rootNode._reactRootContainer._internalRoot.current;
+        }
+        if (!reactRootNode) {
+            console.log('Could not find react root');
+            return;
+        }
         var player = findReactNode(reactRootNode, node => node.setPlayerActive && node.props && node.props.mediaPlayerInstance);
         player = player && player.props && player.props.mediaPlayerInstance ? player.props.mediaPlayerInstance : null;
         var playerState = findReactNode(reactRootNode, node => node.setSrc && node.setInitialPlaybackSettings);
@@ -535,7 +543,7 @@ twitch-videoad.js text/javascript
             console.log('Could not find player state');
             return;
         }
-        if (player.paused || player.core?.paused) {
+        if (player.paused) {
             return;
         }
         if (isSeek) {
